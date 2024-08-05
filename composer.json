@@ -1,0 +1,43 @@
+{
+    "name": "plenta/contao-github-releases-bundle",
+    "type": "contao-bundle",
+    "description": "Reads the releases of a bundle.",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Plenta.io",
+            "homepage": "https://plenta.io"
+        }
+    ],
+    "funding": [{
+        "type": "github",
+        "url": "https://github.com/sponsors/plenta"
+    }],
+    "support":{
+        "issues": "https://github.com/plenta/contao-github-releases-bundle/issues",
+        "source": "https://github.com/plenta/contao-github-releases-bundle",
+    },
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "contao/conflicts": "@dev",
+        "contao/core-bundle": "^5.3"
+    },
+    "extra": {
+        "contao-manager-plugin": "Plenta\\ContaoGithubReleases\\ContaoManager\\Plugin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Plenta\\ContaoGithubReleases\\": "src"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "contao-components/installer": true,
+            "contao/manager-plugin": true,
+            "contao-community-alliance/composer-plugin": true,
+            "php-http/discovery": true
+        }
+    }
+}
