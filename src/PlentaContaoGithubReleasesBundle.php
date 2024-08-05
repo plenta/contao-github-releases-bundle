@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Plenta Contao Github Releases
+ *
+ * @copyright     Copyright (c) 2024, Plenta.io
+ * @author        Plenta.io <https://plenta.io>
+ * @link          https://github.com/plenta/
+ */
+
 declare(strict_types=1);
 
 namespace Plenta\ContaoGithubReleases;

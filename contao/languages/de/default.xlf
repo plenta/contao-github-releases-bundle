@@ -1,0 +1,10 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="de">
+        <body>
+            <trans-unit id="MSC.PLENTA_GITHUB_RELEASES.error">
+                <source>An error has occurred.</source>
+                <target>Es ist ein Fehler aufgetreten.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

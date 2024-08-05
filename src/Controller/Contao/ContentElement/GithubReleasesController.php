@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
+/**
+ * Plenta Contao Github Releases
+ *
+ * @copyright     Copyright (c) 2024, Plenta.io
+ * @author        Plenta.io <https://plenta.io>
+ * @link          https://github.com/plenta/
+ */
+
 namespace Plenta\ContaoGithubReleases\Controller\Contao\ContentElement;
 
 use Contao\Config;
-use Contao\Date;
 use Contao\ContentModel;
 use Symfony\Component\HttpClient\HttpClient;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -23,10 +31,15 @@ class GithubReleasesController extends AbstractContentElementController
 {
     public const TYPE = 'github-releases-content-element';
 
+    public function __construct(
+        protected readonly TranslatorInterface $translator
+    ) {
+    }
+
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $template->empty = 'Nix da';
-        $template->items = $this->fetchGitHubReleases('plenta/contao-jobs-basic-bundle');
+        $template->empty = $this->translator->trans('MSC.PLENTA_GITHUB_RELEASES.error', [], 'contao_default');
+        $template->items = $this->fetchGitHubReleases($model->url);
 
         return $template->getResponse();
     }
@@ -57,9 +70,10 @@ class GithubReleasesController extends AbstractContentElementController
             }
 
             foreach ($releases as $release) {
+                $dateTime = new \DateTime($release['published_at']);
                 $items[] = [
                     'tag' => $release['tag_name'],
-                    'publishedDate' => Date::parse(Config::get('datimFormat'), $release['published_at']),
+                    'publishedDate' => $dateTime->format(Config::get('dateFormat')),
                     'note' => $release['body'],
                     'url' => $release['html_url'],
                 ];

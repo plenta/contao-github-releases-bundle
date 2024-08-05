@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 /**
- * @package       Customer
- * @copyright     Copyright (c) 2023, Plenta.io
+ * Plenta Contao Github Releases
+ *
+ * @copyright     Copyright (c) 2024, Plenta.io
  * @author        Plenta.io <https://plenta.io>
- * @license       commercial
+ * @link          https://github.com/plenta/
  */
 
 use Plenta\ContaoGithubReleases\Controller\Contao\ContentElement\GithubReleasesController;
@@ -14,7 +15,6 @@ use Plenta\ContaoGithubReleases\Controller\Contao\ContentElement\GithubReleasesC
 $GLOBALS['TL_DCA']['tl_content']['palettes'][GithubReleasesController::TYPE] =
     '
     {type_legend},type,headline;
+    {link_legend},url;
     '
 ;
-
-dump($GLOBALS['TL_DCA']['tl_content']['fields']);
