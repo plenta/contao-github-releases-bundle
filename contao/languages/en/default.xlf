@@ -1,6 +1,12 @@
 <?xml version="1.0" ?><xliff version="1.1">
     <file datatype="php" original="contao/languages/en/default.php" source-language="en">
         <body>
+            <trans-unit id="CTE.github-releases-content-element.0">
+                <source>Github releases</source>
+            </trans-unit>
+            <trans-unit id="CTE.github-releases-content-element.1">
+                <source>Shows the Github releases.</source>
+            </trans-unit>
             <trans-unit id="MSC.PLENTA_GITHUB_RELEASES.error">
                 <source>An error has occurred.</source>
             </trans-unit>

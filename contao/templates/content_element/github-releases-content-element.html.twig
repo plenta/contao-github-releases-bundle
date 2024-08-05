@@ -5,7 +5,7 @@
             <div class="tag">{{ item.tag }}</div>
             <div class="date">{{ item.publishedDate }}</div>
             <div class="note">{{ item.note|nl2br }}</div>
-            <div class="url">{{ item.url }}</div>
+            <div class="url"><a href="{{ item.url }}" target="_blank" title="Github">{{ item.url }}</a></div>
         </div>
     {% else %}
         <p class="empty">{{ empty }}</p>
