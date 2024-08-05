@@ -15,6 +15,6 @@ use Plenta\ContaoGithubReleases\Controller\Contao\ContentElement\GithubReleasesC
 $GLOBALS['TL_DCA']['tl_content']['palettes'][GithubReleasesController::TYPE] =
     '
     {type_legend},type,headline;
-    {link_legend},url;
+    {github_legend},url;
     '
 ;

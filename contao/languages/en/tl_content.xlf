@@ -1,0 +1,15 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="contao/languages/en/tl_content.php" source-language="en">
+        <body>
+            <trans-unit id="tl_content.github_legend">
+                <source>Github</source>
+            </trans-unit>
+            <trans-unit id="tl_content.url.0">
+                <source>Repository name</source>
+            </trans-unit>
+            <trans-unit id="tl_content.url.1">
+                <source>Please enter the repository name (e.g. plenta/contao-jobs-basic-bundle).</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
