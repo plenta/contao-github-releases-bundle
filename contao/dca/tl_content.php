@@ -16,3 +16,5 @@ $GLOBALS['TL_DCA']['tl_content']['palettes'][GithubReleasesController::TYPE] =
     {type_legend},type,headline;
     '
 ;
+
+dump($GLOBALS['TL_DCA']['tl_content']['fields']);

@@ -1,9 +1,12 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% block content %}
     {% for item in items %}
-        <div class="tag">{{ item.tag }}</div>
-        <div class="date">...{{ item.publishedDate }}...</div>
-        <div class="note">{{ item.note|nl2br }}</div>
+        <div class="release">
+            <div class="tag">{{ item.tag }}</div>
+            <div class="date">{{ item.publishedDate }}</div>
+            <div class="note">{{ item.note|nl2br }}</div>
+            <div class="url">{{ item.url }}</div>
+        </div>
     {% else %}
         <p class="empty">{{ empty }}</p>
     {% endfor %}

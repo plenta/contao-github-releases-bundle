@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Plenta\ContaoGithubReleases\Controller\Contao\ContentElement;
 
-use Contao\ContentModel;
-use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
-use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Config;
 use Contao\Date;
-use Contao\StringUtil;
+use Contao\ContentModel;
+use Symfony\Component\HttpClient\HttpClient;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 
 #[AsContentElement(type: self::TYPE, category: 'texts')]
 class GithubReleasesController extends AbstractContentElementController
@@ -21,55 +26,48 @@ class GithubReleasesController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $template->empty = 'Nix da';
-        $template->items = $this->fetchGitHubReleases();
+        $template->items = $this->fetchGitHubReleases('plenta/contao-jobs-basic-bundle');
 
         return $template->getResponse();
     }
 
-    protected function fetchGitHubReleases(): ?array
+    protected function fetchGitHubReleases(string $repo): ?array
     {
-        global $objPage;
+        $client = HttpClient::create();
 
-        $url = 'https://api.github.com/repos/plenta/contao-jobs-basic-bundle/releases';
+        try {
+            $items = [];
+            $response = $client->request('GET', 'https://api.github.com/repos/'.$repo.'/releases', [
+                'headers' => [
+                    'User-Agent' => 'PHP'
+                ]
+            ]);
 
-        $ch = curl_init();
+            $statusCode = $response->getStatusCode();
 
-        // Set the URL and other options
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'PHP');
+            if ($statusCode !== 200) {
+                return null;
+            }
 
-        $response = curl_exec($ch);
+            $content = $response->getContent();
+            $releases = json_decode($content, true);
 
-        if (curl_errno($ch)) {
-            curl_close($ch);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return null;
+            }
+
+            foreach ($releases as $release) {
+                $items[] = [
+                    'tag' => $release['tag_name'],
+                    'publishedDate' => Date::parse(Config::get('datimFormat'), $release['published_at']),
+                    'note' => $release['body'],
+                    'url' => $release['html_url'],
+                ];
+            }
+
+            return $items;
+        } catch (TransportExceptionInterface | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
             return null;
         }
-
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code != 200) {
-            curl_close($ch);
-            return null;
-        }
-
-        curl_close($ch);
-
-        $releases = json_decode($response, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return null;
-        }
-
-        $items = [];
-
-        foreach ($releases as $release) {
-            $items[] = [
-                'tag' => $release['tag_name'],
-                'publishedDate' => $release['published_at'],
-                'note' => $release['body'],
-            ];
-        }
-
-        return $items;
     }
 }
