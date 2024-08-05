@@ -15,7 +15,7 @@
     }],
     "support":{
         "issues": "https://github.com/plenta/contao-github-releases-bundle/issues",
-        "source": "https://github.com/plenta/contao-github-releases-bundle",
+        "source": "https://github.com/plenta/contao-github-releases-bundle"
     },
     "require": {
         "php": "^8.1",

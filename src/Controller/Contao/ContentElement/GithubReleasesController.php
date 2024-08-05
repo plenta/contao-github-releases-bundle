@@ -8,69 +8,68 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Date;
+use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AsContentElement(type: self::TYPE, category: 'texts')]
 class GithubReleasesController extends AbstractContentElementController
 {
-    public const TYPE = 'customer-content-element';
+    public const TYPE = 'github-releases-content-element';
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $this->fetchGitHubReleases();
+        $template->empty = 'Nix da';
+        $template->items = $this->fetchGitHubReleases();
 
         return $template->getResponse();
     }
 
-    protected function fetchGitHubReleases()
+    protected function fetchGitHubReleases(): ?array
     {
+        global $objPage;
+
         $url = 'https://api.github.com/repos/plenta/contao-jobs-basic-bundle/releases';
 
-        // Initialize a cURL session
         $ch = curl_init();
 
         // Set the URL and other options
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'PHP'); // GitHub API requires a User-Agent header
+        curl_setopt($ch, CURLOPT_USERAGENT, 'PHP');
 
-        // Execute the request
         $response = curl_exec($ch);
 
-        // Check if any error occurred
         if (curl_errno($ch)) {
-            echo "Service nicht erreichbar";
             curl_close($ch);
-            return;
+            return null;
         }
 
-        // Check the HTTP status code
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if ($http_code != 200) {
-            echo "Service nicht erreichbar";
             curl_close($ch);
-            return;
+            return null;
         }
 
-        // Close the cURL session
         curl_close($ch);
 
-        // Decode the JSON response
         $releases = json_decode($response, true);
 
-        // Check if JSON decoding was successful
         if (json_last_error() !== JSON_ERROR_NONE) {
-            echo "Fehler beim Verarbeiten der JSON-Daten";
-            return;
+            return null;
         }
 
-        // Output the desired nodes
+        $items = [];
+
         foreach ($releases as $release) {
-            echo "Tag Name: " . $release['tag_name'] . "\n";
-            echo "Published At: " . $release['published_at'] . "\n";
-            echo "Body: " . $release['body'] . "\n";
-            echo "\n";
+            $items[] = [
+                'tag' => $release['tag_name'],
+                'publishedDate' => $release['published_at'],
+                'note' => $release['body'],
+            ];
         }
+
+        return $items;
     }
 }
