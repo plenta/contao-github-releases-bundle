@@ -1,4 +1,4 @@
-# Contao Gthub Releases Bundle 
+# Contao Github Releases Bundle 
 
 **Simply display your Github release history on your website.** 🤖
 
